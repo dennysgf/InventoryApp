@@ -10,24 +10,33 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService.Services.TransactionService>();
+
 builder.Services.AddHttpClient("ProductService", client =>
 {
-    client.BaseAddress = new Uri("http://productservice:80/api/");
+    client.BaseAddress = new Uri(builder.Configuration["Services:ProductService"]);
 });
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TransactionService v1");
+    c.RoutePrefix = "swagger";
+});
+
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.Urls.Add("http://+:8082");
 app.Run();
