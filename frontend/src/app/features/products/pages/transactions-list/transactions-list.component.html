@@ -1,0 +1,86 @@
+<h2>Lista de Transacciones</h2>
+
+<div class="flex justify-content-between align-items-center mb-3">
+  <div class="p-input-icon-left">
+    <i class="pi pi-search"></i>
+    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+      placeholder="Buscar transacción..." />
+  </div>
+
+  <button pButton label="Nueva Transacción" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
+</div>
+
+<p-table #dt [value]="transactions" [paginator]="true" [rows]="5" [loading]="loading"
+  [globalFilterFields]="['type','detail']" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+      <th pSortableColumn="date">Fecha <p-sortIcon field="date"></p-sortIcon></th>
+      <th pSortableColumn="type">Tipo <p-sortIcon field="type"></p-sortIcon></th>
+      <th pSortableColumn="productId">ProductoId <p-sortIcon field="productId"></p-sortIcon></th>
+      <th pSortableColumn="quantity">Cantidad <p-sortIcon field="quantity"></p-sortIcon></th>
+      <th pSortableColumn="unitPrice">Precio Unitario <p-sortIcon field="unitPrice"></p-sortIcon></th>
+      <th pSortableColumn="totalPrice">Precio Total <p-sortIcon field="totalPrice"></p-sortIcon></th>
+      <th>Detalle</th>
+      <th>Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-transaction>
+    <tr>
+      <td>{{ transaction.id }}</td>
+      <td>{{ transaction.date | date:'short' }}</td>
+      <td>{{ transaction.type }}</td>
+      <td>{{ transaction.productId }}</td>
+      <td>{{ transaction.quantity }}</td>
+      <td>{{ transaction.unitPrice | currency }}</td>
+      <td>{{ transaction.totalPrice | currency }}</td>
+      <td>{{ transaction.detail }}</td>
+      <td>
+        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-info mr-2"
+          (click)="editTransaction(transaction)"></button>
+        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger"
+          (click)="deleteTransaction(transaction)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog header="{{ isEdit ? 'Editar Transacción' : 'Nueva Transacción' }}" [(visible)]="transactionDialog"
+  [modal]="true" [style]="{width: '450px'}">
+  <form [formGroup]="transactionForm" class="p-fluid">
+    <div class="field">
+      <label for="type">Tipo</label>
+      <input id="type" type="text" pInputText formControlName="type" />
+    </div>
+    <div class="field">
+      <label for="productId">Producto</label>
+      <p-dropdown [options]="products" optionLabel="name" optionValue="id" [filter]="true"
+        placeholder="Seleccione un producto" formControlName="productId" inputId="productId">
+      </p-dropdown>
+    </div>
+
+
+    <div class="field">
+      <label for="quantity">Cantidad</label>
+      <input id="quantity" type="number" pInputText formControlName="quantity" />
+    </div>
+    <div class="field">
+      <label for="unitPrice">Precio Unitario</label>
+      <input id="unitPrice" type="number" pInputText formControlName="unitPrice" />
+    </div>
+    <div class="field">
+      <label for="detail">Detalle</label>
+      <input id="detail" type="text" pInputText formControlName="detail" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text"
+      (click)="transactionDialog=false"></button>
+    <button pButton label="Guardar" icon="pi pi-check" class="p-button-success" (click)="saveTransaction()"
+      [disabled]="transactionForm.invalid"></button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

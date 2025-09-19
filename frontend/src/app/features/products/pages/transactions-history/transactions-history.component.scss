@@ -1,0 +1,26 @@
+:host ::ng-deep {
+  form {
+    .p-inputtext, .p-dropdown, .p-calendar {
+      width: 100%;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .p-table {
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #f5f7fa;
+    font-weight: 600;
+    text-align: left;
+  }
+}

@@ -1,0 +1,59 @@
+<h2>Historial de Transacciones</h2>
+
+<form [formGroup]="filterForm" class="grid mb-3">
+  <div class="col-12 md:col-3">
+    <label for="productId">Producto ID</label>
+    <input id="productId" type="number" pInputText formControlName="productId" />
+  </div>
+
+  <div class="col-12 md:col-3">
+    <label for="from">Desde</label>
+    <p-calendar formControlName="from" dateFormat="yy-mm-dd"></p-calendar>
+  </div>
+
+  <div class="col-12 md:col-3">
+    <label for="to">Hasta</label>
+    <p-calendar formControlName="to" dateFormat="yy-mm-dd"></p-calendar>
+  </div>
+
+  <div class="col-12 md:col-3">
+    <label for="type">Tipo</label>
+    <p-dropdown [options]="transactionTypes" formControlName="type" placeholder="Seleccione tipo"></p-dropdown>
+  </div>
+
+  <div class="col-12 mt-2">
+    <button pButton label="Buscar" icon="pi pi-search" (click)="searchHistory()" class="p-button-primary"></button>
+  </div>
+</form>
+
+<p-table [value]="history" [paginator]="true" [rows]="5" [loading]="loading" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Fecha</th>
+      <th>Tipo</th>
+      <th>Producto</th>
+      <th>Stock Actual</th>
+      <th>Cantidad</th>
+      <th>Precio Unitario</th>
+      <th>Precio Total</th>
+      <th>Detalle</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.transactionId }}</td>
+      <td>{{ row.date | date:'short' }}</td>
+      <td>{{ row.type }}</td>
+      <td>{{ row.productName }}</td>
+      <td>{{ row.currentStock }}</td>
+      <td>{{ row.quantity }}</td>
+      <td>{{ row.unitPrice | currency }}</td>
+      <td>{{ row.totalPrice | currency }}</td>
+      <td>{{ row.detail }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-toast></p-toast>

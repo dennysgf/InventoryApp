@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Transaction } from '../models/transaction.model';
-import {environment} from "../../../../environment";
+import { environment } from '../../../../environment';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,14 @@ export class TransactionService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getHistory(productId: number, from?: string, to?: string, type?: string): Observable<any[]> {
+    let params = new HttpParams().set('productId', productId.toString());
+    if (from) params = params.set('from', from);
+    if (to) params = params.set('to', to);
+    if (type) params = params.set('type', type);
+
+    return this.http.get<any[]>(`${this.apiUrl}/history`, { params });
   }
 }
