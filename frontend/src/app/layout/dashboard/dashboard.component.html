@@ -1,0 +1,26 @@
+<div class="dashboard grid">
+
+  <aside class="col-12 md:col-3 lg:col-2 p-3 surface-ground border-right-1 border-300">
+    <h3 class="mb-3">Dashboard</h3>
+
+    <div class="flex flex-column gap-2">
+      <button pButton
+              label="Productos"
+              icon="pi pi-box"
+              routerLink="/products"
+              routerLinkActive="p-button-outlined">
+      </button>
+
+      <button pButton
+              label="Transacciones"
+              icon="pi pi-shopping-cart"
+              routerLink="/transactions"
+              routerLinkActive="p-button-outlined">
+      </button>
+    </div>
+  </aside>
+
+  <main class="col-12 md:col-9 lg:col-10 p-4">
+    <router-outlet></router-outlet>
+  </main>
+</div>

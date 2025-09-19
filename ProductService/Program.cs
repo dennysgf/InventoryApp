@@ -17,6 +17,19 @@ builder.Services.AddScoped<IProductService, ProductService.Services.ProductServi
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        
+        policy.WithOrigins("http://localhost:4200", "http://frontend:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -34,7 +47,6 @@ app.UseSwaggerUI(c =>
 
 
 app.UseAuthorization();
-
+app.UseCors("AllowFrontend");
 app.MapControllers();
-
 app.Run();

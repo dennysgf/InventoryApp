@@ -1,0 +1,94 @@
+<h2>Lista de Productos</h2>
+
+<div class="flex justify-content-between align-items-center mb-3">
+  <!-- Buscador global -->
+  <div class="p-input-icon-left">
+    <i class="pi pi-search"></i>
+    <input pInputText type="text"
+           (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+           placeholder="Buscar producto..." />
+  </div>
+
+  <!-- Botón nuevo producto -->
+  <button pButton label="Nuevo Producto" icon="pi pi-plus"
+          class="p-button-success" (click)="openNew()"></button>
+</div>
+
+<!-- Tabla -->
+<p-table #dt [value]="products" [paginator]="true" [rows]="5" [loading]="loading"
+         [globalFilterFields]="['name','category']" responsiveLayout="scroll">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+      <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
+      <th>
+        Categoría
+        <input pInputText type="text"
+               (input)="dt.filter($any($event.target).value, 'category', 'contains')"
+               placeholder="Filtrar..." />
+      </th>
+      <th pSortableColumn="price">Precio <p-sortIcon field="price"></p-sortIcon></th>
+      <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
+      <th>Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.price | currency }}</td>
+      <td>{{ product.stock }}</td>
+      <td>
+        <button pButton icon="pi pi-pencil"
+                class="p-button-rounded p-button-info mr-2"
+                (click)="editProduct(product)"></button>
+        <button pButton icon="pi pi-trash"
+                class="p-button-rounded p-button-danger"
+                (click)="deleteProduct(product)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Modal -->
+<p-dialog header="{{ isEdit ? 'Editar Producto' : 'Nuevo Producto' }}"
+          [(visible)]="productDialog" [modal]="true" [style]="{width: '450px'}">
+  <form [formGroup]="productForm" class="p-fluid">
+    <div class="field">
+      <label for="name">Nombre</label>
+      <input id="name" type="text" pInputText formControlName="name" />
+    </div>
+    <div class="field">
+      <label for="description">Descripción</label>
+      <input id="description" type="text" pInputText formControlName="description" />
+    </div>
+    <div class="field">
+      <label for="category">Categoría</label>
+      <input id="category" type="text" pInputText formControlName="category" />
+    </div>
+    <div class="field">
+      <label for="imageUrl">Imagen URL</label>
+      <input id="imageUrl" type="text" pInputText formControlName="imageUrl" />
+    </div>
+    <div class="field">
+      <label for="price">Precio</label>
+      <input id="price" type="number" pInputText formControlName="price" />
+    </div>
+    <div class="field">
+      <label for="stock">Stock</label>
+      <input id="stock" type="number" pInputText formControlName="stock" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancelar" icon="pi pi-times"
+            class="p-button-text" (click)="productDialog=false"></button>
+    <button pButton label="Guardar" icon="pi pi-check"
+            class="p-button-success" (click)="saveProduct()"
+            [disabled]="productForm.invalid"></button>
+  </ng-template>
+</p-dialog>
+
+<p-toast></p-toast>

@@ -1,0 +1,73 @@
+:host ::ng-deep {
+  .p-input-icon-left {
+    width: 100%;
+    max-width: 300px;
+
+    input {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+
+  .p-table {
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .p-datatable-thead > tr > th {
+    background: #f5f7fa;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: #f9fafc;
+  }
+
+  .p-button-rounded {
+    margin-right: 0.5rem;
+  }
+
+  .p-button-success {
+    background: #22c55e;
+    border: none;
+
+    &:hover {
+      background: #16a34a;
+    }
+  }
+
+  .p-button-info {
+    background: #3b82f6;
+    border: none;
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+
+  .p-button-danger {
+    background: #ef4444;
+    border: none;
+
+    &:hover {
+      background: #dc2626;
+    }
+  }
+
+  .p-dialog .p-field {
+    margin-bottom: 1rem;
+  }
+
+  .p-dialog label {
+    font-weight: 600;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
