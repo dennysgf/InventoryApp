@@ -7,7 +7,7 @@ public class TransactionService : ITransactionService
 {
     private readonly ITransactionRepository _repository;
 
-    public TransactionService(ITransactionRepository repository)
+    public TransactionService(ITransactionRepository repository, IHttpClientFactory httpClientFactory)
     {
         _repository = repository;
     }
