@@ -116,6 +116,32 @@ namespace ProductService.Controllers
             var success = await _service.DeleteAsync(id);
             return success ? NoContent() : NotFound();
         }
+        
+        [HttpPatch("{id}/stock")]
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] StockUpdateDto dto)
+        {
+            if (dto.Adjustment == 0)
+                return BadRequest("El ajuste de stock no puede ser 0.");
+
+            var product = await _service.GetByIdAsync(id);
+            if (product == null)
+                return NotFound("Producto no encontrado.");
+
+            var newStock = product.Stock + dto.Adjustment;
+            if (newStock < 0)
+                return BadRequest("El stock no puede ser negativo.");
+
+            product.Stock = newStock;
+
+            var updated = await _service.UpdateAsync(id, product);
+            if (updated == null)
+                return StatusCode(500, "Error al actualizar el stock del producto.");
+            Console.WriteLine($"[UpdateStock] Id={id}, dto={(dto == null ? "NULL" : dto.Adjustment.ToString())}");
+
+            return Ok(new { message = "Stock actualizado correctamente", productId = id, stock = updated.Stock });
+        }
+
+        
     }
 }
 

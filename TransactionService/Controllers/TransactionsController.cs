@@ -20,69 +20,95 @@ namespace TransactionService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TransactionDto>>> GetAll()
         {
-            var transactions = await _service.GetAllAsync();
-
-            var result = transactions.Select(t => new TransactionDto
+            try
             {
-                Id = t.Id,
-                Date = t.Date,
-                Type = t.Type,
-                ProductId = t.ProductId,
-                Quantity = t.Quantity,
-                TotalPrice = t.TotalPrice
-            });
+                var transactions = await _service.GetAllAsync();
+                if (!transactions.Any())
+                    return NotFound("No existen transacciones registradas.");
 
-            return Ok(result);
+                var result = transactions.Select(t => new TransactionDto
+                {
+                    Id = t.Id,
+                    Date = t.Date,
+                    Type = t.Type,
+                    ProductId = t.ProductId,
+                    Quantity = t.Quantity,
+                    TotalPrice = t.TotalPrice
+                });
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TransactionDto>> GetById(int id)
         {
-            var transaction = await _service.GetByIdAsync(id);
-            if (transaction == null) return NotFound();
-
-            var result = new TransactionDto
+            try
             {
-                Id = transaction.Id,
-                Date = transaction.Date,
-                Type = transaction.Type,
-                ProductId = transaction.ProductId,
-                Quantity = transaction.Quantity,
-                TotalPrice = transaction.TotalPrice
-            };
+                var transaction = await _service.GetByIdAsync(id);
+                if (transaction == null)
+                    return NotFound($"Transacción con ID {id} no encontrada.");
 
-            return Ok(result);
+                var result = new TransactionDto
+                {
+                    Id = transaction.Id,
+                    Date = transaction.Date,
+                    Type = transaction.Type,
+                    ProductId = transaction.ProductId,
+                    Quantity = transaction.Quantity,
+                    TotalPrice = transaction.TotalPrice
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<TransactionDto>> Create(CreateTransactionDto dto)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
 
-            var transaction = new Transaction
+            try
             {
-                Date = DateTime.UtcNow,
-                Type = dto.Type,
-                ProductId = dto.ProductId,
-                Quantity = dto.Quantity,
-                UnitPrice = dto.UnitPrice,
-                TotalPrice = dto.UnitPrice * dto.Quantity,
-                Detail = dto.Detail
-            };
+                var transaction = new Transaction
+                {
+                    Type = dto.Type,
+                    ProductId = dto.ProductId,
+                    Quantity = dto.Quantity,
+                    UnitPrice = dto.UnitPrice,
+                    Detail = dto.Detail
+                    // Date y TotalPrice ya los calcula el servicio
+                };
 
-            var created = await _service.CreateAsync(transaction);
+                var created = await _service.CreateAsync(transaction);
+                if (created == null)
+                    return BadRequest("Stock insuficiente o producto no encontrado.");
 
-            var result = new TransactionDto
+                var result = new TransactionDto
+                {
+                    Id = created.Id,
+                    Date = created.Date,
+                    Type = created.Type,
+                    ProductId = created.ProductId,
+                    Quantity = created.Quantity,
+                    TotalPrice = created.TotalPrice
+                };
+
+                return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            }
+            catch (Exception ex)
             {
-                Id = created.Id,
-                Date = created.Date,
-                Type = created.Type,
-                ProductId = created.ProductId,
-                Quantity = created.Quantity,
-                TotalPrice = created.TotalPrice
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
@@ -90,39 +116,57 @@ namespace TransactionService.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var transaction = new Transaction
+            try
             {
-                Date = DateTime.UtcNow,
-                Type = dto.Type,
-                ProductId = dto.ProductId,
-                Quantity = dto.Quantity,
-                UnitPrice = dto.UnitPrice,
-                TotalPrice = dto.UnitPrice * dto.Quantity,
-                Detail = dto.Detail
-            };
+                var transaction = new Transaction
+                {
+                    Type = dto.Type,
+                    ProductId = dto.ProductId,
+                    Quantity = dto.Quantity,
+                    UnitPrice = dto.UnitPrice,
+                    Detail = dto.Detail
+                };
 
-            var updated = await _service.UpdateAsync(id, transaction);
-            if (updated == null) return NotFound();
+                var updated = await _service.UpdateAsync(id, transaction);
+                if (updated == null)
+                    return NotFound($"No se pudo actualizar. Transacción con ID {id} no encontrada o stock insuficiente.");
 
-            var result = new TransactionDto
+                var result = new TransactionDto
+                {
+                    Id = updated.Id,
+                    Date = updated.Date,
+                    Type = updated.Type,
+                    ProductId = updated.ProductId,
+                    Quantity = updated.Quantity,
+                    TotalPrice = updated.TotalPrice
+                };
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                Id = updated.Id,
-                Date = updated.Date,
-                Type = updated.Type,
-                ProductId = updated.ProductId,
-                Quantity = updated.Quantity,
-                TotalPrice = updated.TotalPrice
-            };
-
-            return Ok(result);
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _service.DeleteAsync(id);
-            return success ? NoContent() : NotFound();
+            try
+            {
+                var success = await _service.DeleteAsync(id);
+                if (!success)
+                    return NotFound($"No se pudo eliminar. Transacción con ID {id} no encontrada.");
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
         }
+        
     }
+    
 }
 

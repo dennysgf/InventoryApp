@@ -223,3 +223,4 @@ C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\TransactionService.pdb
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\TransactionService.genruntimeconfig.cache
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\ref\TransactionService.dll
+C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\TransactionService.sourcelink.json

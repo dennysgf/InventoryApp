@@ -1,4 +1,5 @@
-﻿using TransactionService.Models;
+﻿
+using TransactionService.Models;
 using TransactionService.Repositories;
 
 namespace TransactionService.Services;
@@ -6,10 +7,12 @@ namespace TransactionService.Services;
 public class TransactionService : ITransactionService
 {
     private readonly ITransactionRepository _repository;
+    private readonly HttpClient _httpClient;
 
     public TransactionService(ITransactionRepository repository, IHttpClientFactory httpClientFactory)
     {
         _repository = repository;
+        _httpClient = httpClientFactory.CreateClient("ProductService");
     }
 
     public async Task<IEnumerable<Transaction>> GetAllAsync() =>
@@ -20,23 +23,82 @@ public class TransactionService : ITransactionService
 
     public async Task<Transaction> CreateAsync(Transaction transaction)
     {
-        transaction.TotalPrice = transaction.UnitPrice * transaction.Quantity;
-        await _repository.AddAsync(transaction);
-        return transaction;
+
+    var product = await _httpClient.GetFromJsonAsync<ProductDto>(
+        $"products/{transaction.ProductId}"
+    );
+
+    if (product == null)
+    {
+        Console.WriteLine($"[CreateAsync] Producto {transaction.ProductId} no encontrado en ProductService");
+        throw new Exception("Producto no encontrado en ProductService");
+    }
+    
+    if (transaction.Type == "Venta" && product.Stock < transaction.Quantity)
+    {
+        throw new Exception("Stock insuficiente para la venta");
+    }
+
+    var stockAdjustment = transaction.Type == "Venta"
+        ? -transaction.Quantity
+        : transaction.Quantity;
+
+    Console.WriteLine($"[CreateAsync] Ajuste de stock: {stockAdjustment} para ProductoId={transaction.ProductId}");
+    
+    var response = await _httpClient.PatchAsJsonAsync(
+        $"products/{transaction.ProductId}/stock",
+        new { Adjustment = stockAdjustment }
+    );
+    
+
+    if (!response.IsSuccessStatusCode)
+    {
+        throw new Exception("Error al actualizar stock en ProductService");
+    }
+    
+    transaction.TotalPrice = transaction.UnitPrice * transaction.Quantity;
+    transaction.Date = DateTime.UtcNow;
+
+    await _repository.AddAsync(transaction);
+    return transaction;
     }
 
     public async Task<Transaction?> UpdateAsync(int id, Transaction transaction)
     {
         var existing = await _repository.GetByIdAsync(id);
         if (existing == null) return null;
+        
+        var revertAdjustment = existing.Type == "Venta"
+            ? existing.Quantity
+            : -existing.Quantity;
 
-        existing.Date = transaction.Date;
+        var revertResponse = await _httpClient.PatchAsJsonAsync(
+            $"products/{existing.ProductId}/stock",
+            new { Adjustment = revertAdjustment }
+        );
+
+        if (!revertResponse.IsSuccessStatusCode)
+            throw new Exception("Error al revertir stock de la transacción anterior en ProductService");
+        
+        var newAdjustment = transaction.Type == "Venta"
+            ? -transaction.Quantity
+            : transaction.Quantity;
+
+        var applyResponse = await _httpClient.PatchAsJsonAsync(
+            $"products/{transaction.ProductId}/stock",
+            new { Adjustment = newAdjustment }
+        );
+
+        if (!applyResponse.IsSuccessStatusCode)
+            throw new Exception("Error al aplicar nuevo stock en ProductService");
+        
         existing.Type = transaction.Type;
         existing.ProductId = transaction.ProductId;
         existing.Quantity = transaction.Quantity;
         existing.UnitPrice = transaction.UnitPrice;
         existing.TotalPrice = transaction.UnitPrice * transaction.Quantity;
         existing.Detail = transaction.Detail;
+        existing.Date = DateTime.UtcNow;
 
         await _repository.UpdateAsync(existing);
         return existing;
@@ -46,6 +108,18 @@ public class TransactionService : ITransactionService
     {
         var existing = await _repository.GetByIdAsync(id);
         if (existing == null) return false;
+
+        var revertAdjustment = existing.Type == "Venta"
+            ? existing.Quantity
+            : -existing.Quantity;
+
+        var revertResponse = await _httpClient.PatchAsJsonAsync(
+            $"products/{existing.ProductId}/stock",
+            new { Adjustment = revertAdjustment }
+        );
+
+        if (!revertResponse.IsSuccessStatusCode)
+            throw new Exception("Error al revertir stock en ProductService");
 
         await _repository.DeleteAsync(existing);
         return true;

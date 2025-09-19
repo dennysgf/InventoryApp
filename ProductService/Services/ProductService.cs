@@ -48,5 +48,18 @@ namespace ProductService.Services
             await _repository.DeleteAsync(existing);
             return true;
         }
+
+        public async Task<bool> UpdateStockAsync(int productId, int quantity)
+        {
+            var product = await _repository.GetByIdAsync(productId);
+            if (product == null) return false;
+            
+            var newStock = product.Stock + quantity;
+            if (newStock < 0) return false;
+
+            product.Stock = newStock;
+            await _repository.UpdateAsync(product);
+            return true;
+        }
     }
 }
