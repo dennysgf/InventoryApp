@@ -224,3 +224,5 @@ C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\TransactionService.genruntimeconfig.cache
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\ref\TransactionService.dll
 C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\obj\Debug\net8.0\TransactionService.sourcelink.json
+C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\bin\Debug\net8.0\TransactionService.Tests\obj\project.assets.json
+C:\Users\usuario\Desktop\proyecto\InventoryApp\TransactionService\bin\Debug\net8.0\TransactionService.Tests\obj\TransactionService.Tests.csproj.nuget.dgspec.json

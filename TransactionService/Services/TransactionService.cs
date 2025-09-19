@@ -1,6 +1,8 @@
 ﻿
+using Newtonsoft.Json;
 using TransactionService.Models;
 using TransactionService.Repositories;
+using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 
 namespace TransactionService.Services;
 
@@ -124,4 +126,19 @@ public class TransactionService : ITransactionService
         await _repository.DeleteAsync(existing);
         return true;
     }
+    public async Task<ProductDto?> GetProductByIdAsync(int productId)
+    {
+        try
+        {
+            var product = await _httpClient.GetFromJsonAsync<ProductDto>($"products/{productId}");
+            return product;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[GetProductByIdAsync] Error obteniendo producto {productId}: {ex.Message}");
+            return null;
+        }
+    }
+
+    
 }

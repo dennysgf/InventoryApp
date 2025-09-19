@@ -224,3 +224,5 @@ C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\obj\Debug\net8.0\r
 C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\bin\Debug\net8.0\Npgsql.dll
 C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\obj\Debug\net8.0\ProductService.sourcelink.json
+C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\bin\Debug\net8.0\ProductService.Tests\obj\ProductService.Tests.csproj.nuget.dgspec.json
+C:\Users\usuario\Desktop\proyecto\InventoryApp\ProductService\bin\Debug\net8.0\ProductService.Tests\obj\project.assets.json

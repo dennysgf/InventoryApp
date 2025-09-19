@@ -9,6 +9,8 @@ namespace TransactionService.Services
         Task<Transaction> CreateAsync(Transaction transaction);
         Task<Transaction?> UpdateAsync(int id, Transaction transaction);
         Task<bool> DeleteAsync(int id);
+        Task<ProductDto?> GetProductByIdAsync(int productId);
+
     }
 }
 

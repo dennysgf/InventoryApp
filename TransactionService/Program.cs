@@ -12,9 +12,8 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService.Services.TransactionService>();
 builder.Services.AddHttpClient("ProductService", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000/api/");
+    client.BaseAddress = new Uri("http://productservice:80/api/");
 });
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -86,7 +86,6 @@ namespace TransactionService.Controllers
                     Quantity = dto.Quantity,
                     UnitPrice = dto.UnitPrice,
                     Detail = dto.Detail
-                    // Date y TotalPrice ya los calcula el servicio
                 };
 
                 var created = await _service.CreateAsync(transaction);
@@ -159,6 +158,64 @@ namespace TransactionService.Controllers
                     return NotFound($"No se pudo eliminar. Transacción con ID {id} no encontrada.");
 
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+        [HttpGet("history")]
+        public async Task<ActionResult<IEnumerable<TransactionHistoryDto>>> GetHistory(
+            [FromQuery] int productId,
+            [FromQuery] DateTime? from = null,
+            [FromQuery] DateTime? to = null,
+            [FromQuery] string? type = null)
+        {
+            try
+            {
+                var transactions = await _service.GetAllAsync();
+
+                var filtered = transactions.Where(t => t.ProductId == productId);
+
+                if (from.HasValue)
+                {
+                    var fromDateLocal = from.Value.Date;
+                    var fromUtc = DateTime.SpecifyKind(fromDateLocal, DateTimeKind.Local).ToUniversalTime();
+                    filtered = filtered.Where(t => t.Date >= fromUtc);
+                }
+
+                if (to.HasValue)
+                {
+                    var toDateLocal = to.Value.Date.AddDays(1).AddTicks(-1);
+                    var toUtc = DateTime.SpecifyKind(toDateLocal, DateTimeKind.Local).ToUniversalTime();
+                    filtered = filtered.Where(t => t.Date <= toUtc);
+                }
+
+                if (!string.IsNullOrEmpty(type))
+                    filtered = filtered.Where(t => t.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
+
+                if (!filtered.Any())
+                    return NotFound("No existen transacciones para el producto con los filtros aplicados.");
+
+                var product = await _service.GetProductByIdAsync(productId);
+                if (product == null)
+                    return NotFound("Producto no encontrado en ProductService.");
+
+                var result = filtered.Select(t => new TransactionHistoryDto
+                {
+                    TransactionId = t.Id,
+                    Date = t.Date,
+                    Type = t.Type,
+                    ProductId = t.ProductId,
+                    ProductName = product.Name,
+                    CurrentStock = product.Stock,
+                    Quantity = t.Quantity,
+                    UnitPrice = t.UnitPrice,
+                    TotalPrice = t.TotalPrice,
+                    Detail = t.Detail
+                });
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
