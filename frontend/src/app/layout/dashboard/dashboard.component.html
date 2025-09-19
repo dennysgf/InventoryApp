@@ -1,0 +1,22 @@
+<div class="layout flex h-screen">
+
+  <aside class="sidebar w-64 bg-gray-900 text-white p-4 flex flex-col">
+    <h2 class="text-xl font-bold mb-6">InventoryApp</h2>
+    <ul class="space-y-4">
+      <li>
+        <a routerLink="/products" routerLinkActive="active" class="flex items-center gap-2">
+          <i class="pi pi-box"></i> Productos
+        </a>
+      </li>
+      <li>
+        <a routerLink="/transactions" routerLinkActive="active" class="flex items-center gap-2">
+          <i class="pi pi-shopping-cart"></i> Transacciones
+        </a>
+      </li>
+    </ul>
+  </aside>
+  >
+  <main class="content flex-1 bg-gray-100 p-6 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>

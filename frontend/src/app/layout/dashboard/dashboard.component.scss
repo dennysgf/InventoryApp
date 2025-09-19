@@ -1,0 +1,15 @@
+.sidebar {
+  .active {
+    font-weight: bold;
+    color: #42a5f5;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      color: #42a5f5;
+    }
+  }
+}
