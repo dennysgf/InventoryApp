@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  productservice:
+    build:
+      context: .
+      dockerfile: ProductService/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      inventorydb:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=inventorydb;Database=inventorydb;Username=postgres;Password=postgres
+
+  transactionservice:
+    build:
+      context: .
+      dockerfile: TransactionService/Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      transactiondb:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=transactiondb;Database=transactiondb;Username=postgres;Password=postgres
+
+  inventorydb:
+    image: postgres:16
+    container_name: inventorydb
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: inventorydb
+    ports:
+      - "5433:5432"
+    volumes:
+      - inventory_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  transactiondb:
+    image: postgres:16
+    container_name: transactiondb
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: transactiondb
+    ports:
+      - "5434:5432"
+    volumes:
+      - transaction_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile 
+    ports:
+      - "4200:4200"
+    depends_on:
+      - productservice
+      - transactionservice
+    volumes:              
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+volumes:
+  inventory_data:
+  transaction_data:
