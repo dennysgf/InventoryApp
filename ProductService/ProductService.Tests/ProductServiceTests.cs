@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moq;
 using ProductService.Models;
 using ProductService.Repositories;
 using Xunit;

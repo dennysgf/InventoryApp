@@ -1,4 +1,6 @@
-﻿namespace TransactionService.Models.DTOs
+﻿using System;
+
+namespace TransactionService.Models.DTOs
 {
     public class TransactionDto
     {

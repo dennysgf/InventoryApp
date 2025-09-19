@@ -1,11 +1,14 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using Moq.Protected;
 using Xunit;
 using TransactionService.Models;
 using TransactionService.Repositories;
 using System.Net;
-
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace TransactionService.Tests.Services

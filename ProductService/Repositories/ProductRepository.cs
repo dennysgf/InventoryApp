@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Data;
 using ProductService.Models;

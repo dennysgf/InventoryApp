@@ -1,4 +1,6 @@
-﻿namespace TransactionService.Models;
+﻿using System;
+
+namespace TransactionService.Models;
 
 public class Transaction
 {

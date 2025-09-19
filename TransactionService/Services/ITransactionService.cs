@@ -1,4 +1,6 @@
-﻿using TransactionService.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using TransactionService.Models;
 
 namespace TransactionService.Services
 {
