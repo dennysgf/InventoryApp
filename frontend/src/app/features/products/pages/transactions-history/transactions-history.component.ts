@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { TransactionService } from '../../../../core/services/transaction.service';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,6 +10,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TransactionHistory } from '../../../../core/models/transaction-history.model';
+import {Product} from "../../../../core/models/product.model";
+import {ProductService} from "../../../../core/services/product.service";
 
 @Component({
   selector: 'app-transactions-history',
@@ -29,10 +30,10 @@ import { TransactionHistory } from '../../../../core/models/transaction-history.
   templateUrl: './transactions-history.component.html',
   styleUrls: ['./transactions-history.component.scss']
 })
-export class TransactionsHistoryComponent {
+export class TransactionsHistoryComponent implements OnInit {
   history: TransactionHistory[] = [];
   loading = false;
-
+  products: Product[] = [];
   filterForm: FormGroup;
 
   transactionTypes = [
@@ -43,15 +44,27 @@ export class TransactionsHistoryComponent {
   constructor(
     private fb: FormBuilder,
     private transactionService: TransactionService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private productService: ProductService
   ) {
     this.filterForm = this.fb.group({
-      productId: [''],
+      productId: [null],
       from: [null],
       to: [null],
       type: ['']
     });
   }
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.productService.getAll().subscribe({
+      next: (data) => (this.products = data),
+      error: (err) => console.error('Error cargando productos', err)
+    });
+  }
+
 
   searchHistory() {
     const { productId, from, to, type } = this.filterForm.value;
@@ -89,6 +102,6 @@ export class TransactionsHistoryComponent {
   }
 
   private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0]; // yyyy-MM-dd
+    return date.toISOString().split('T')[0];
   }
 }

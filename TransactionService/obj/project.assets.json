@@ -10379,19 +10379,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Usuario\\.nuget\\packages\\": {}
+    "C:\\Users\\usuario\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\proyectos\\InventoryApp\\TransactionService\\TransactionService.csproj",
+      "projectUniqueName": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\TransactionService\\TransactionService.csproj",
       "projectName": "TransactionService",
-      "projectPath": "F:\\proyectos\\InventoryApp\\TransactionService\\TransactionService.csproj",
-      "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-      "outputPath": "F:\\proyectos\\InventoryApp\\TransactionService\\obj\\",
+      "projectPath": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\TransactionService\\TransactionService.csproj",
+      "packagesPath": "C:\\Users\\usuario\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\TransactionService\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\usuario\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

@@ -50,6 +50,15 @@ export class TransactionsListComponent implements OnInit {
     this.loadTransactions();
     this.initForm();
     this.loadProducts();
+    this.transactionForm.get('productId')?.valueChanges.subscribe(productId => {
+      const product = this.products.find(p => p.id === productId);
+      if (product) {
+        this.transactionForm.patchValue({
+          unitPrice: product.price,
+          detail: product.name
+        });
+      }
+    });
   }
   loadProducts() {
     this.productService.getAll().subscribe({
@@ -62,7 +71,7 @@ export class TransactionsListComponent implements OnInit {
       type: ['', Validators.required],
       productId: [null, Validators.required],
       quantity: [0, [Validators.required, Validators.min(1)]],
-      unitPrice: [0, [Validators.required, Validators.min(0)]],
+      unitPrice: [{ value: 0, disabled: true }, [Validators.required, Validators.min(0)]],
       detail: ['']
     });
   }
@@ -71,14 +80,15 @@ export class TransactionsListComponent implements OnInit {
     this.loading = true;
     this.transactionService.getAll().subscribe({
       next: (data) => {
+        console.log("Transactions from API:", data);
         this.transactions = data;
         this.loading = false;
       },
       error: () => {
         this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudieron cargar las transacciones'
+          severity: 'info',
+          summary: 'Info',
+          detail: 'No hay transacciones creadas hasta el momento'
         });
         this.loading = false;
       }
@@ -93,6 +103,7 @@ export class TransactionsListComponent implements OnInit {
 
   editTransaction(transaction: Transaction) {
     this.selectedTransaction = transaction;
+    this.isEdit = true;
 
     this.transactionForm.patchValue({
       id: transaction.id,
@@ -117,7 +128,9 @@ export class TransactionsListComponent implements OnInit {
       return;
     }
 
-    const transactionData: Transaction = this.transactionForm.value;
+    const transactionData: Transaction = {
+      ...this.transactionForm.getRawValue()
+    };
 
     if (this.isEdit && this.selectedTransaction) {
       this.transactionService.update(this.selectedTransaction.id, transactionData).subscribe({
@@ -154,5 +167,13 @@ export class TransactionsListComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar' });
       }
     });
+  }
+  onProductChange(event: any) {
+    const selectedProduct = this.products.find(p => p.id === event.value);
+    if (selectedProduct) {
+      this.transactionForm.patchValue({
+        unitPrice: selectedProduct.price
+      });
+    }
   }
 }

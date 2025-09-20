@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Transaction } from '../models/transaction.model';
 import { environment } from '../../../../environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,21 @@ export class TransactionService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Transaction[]> {
-    return this.http.get<Transaction[]>(this.apiUrl);
+    return this.http.get<any[]>(this.apiUrl).pipe(
+      map(transactions =>
+        transactions.map(t => ({
+          id: t.id ?? t.Id,
+          date: t.date ?? t.Date,
+          type: t.type ?? t.Type,
+          productId: t.productId ?? t.ProductId,
+          quantity: t.quantity ?? t.Quantity,
+          unitPrice: t.unitPrice ?? t.UnitPrice,
+          totalPrice: t.totalPrice ?? t.TotalPrice,
+          detail: t.detail ?? t.Detail
+        }))
+      )
+    );
   }
-
   getById(id: number): Observable<Transaction> {
     return this.http.get<Transaction>(`${this.apiUrl}/${id}`);
   }

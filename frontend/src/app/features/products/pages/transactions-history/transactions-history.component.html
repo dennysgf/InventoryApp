@@ -2,8 +2,17 @@
 
 <form [formGroup]="filterForm" class="grid mb-3">
   <div class="col-12 md:col-3">
-    <label for="productId">Producto ID</label>
-    <input id="productId" type="number" pInputText formControlName="productId" />
+    <label for="productId">Producto</label>
+    <p-dropdown
+      [options]="products"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      placeholder="Seleccione un producto"
+      formControlName="productId"
+      inputId="productId">
+    </p-dropdown>
+
   </div>
 
   <div class="col-12 md:col-3">
@@ -29,7 +38,6 @@
 <p-table [value]="history" [paginator]="true" [rows]="5" [loading]="loading" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
-      <th>ID</th>
       <th>Fecha</th>
       <th>Tipo</th>
       <th>Producto</th>
@@ -43,7 +51,6 @@
 
   <ng-template pTemplate="body" let-row>
     <tr>
-      <td>{{ row.transactionId }}</td>
       <td>{{ row.date | date:'short' }}</td>
       <td>{{ row.type }}</td>
       <td>{{ row.productName }}</td>

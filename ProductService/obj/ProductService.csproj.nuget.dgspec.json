@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "F:\\proyectos\\InventoryApp\\ProductService\\ProductService.csproj": {}
+    "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\ProductService\\ProductService.csproj": {}
   },
   "projects": {
-    "F:\\proyectos\\InventoryApp\\ProductService\\ProductService.csproj": {
+    "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\ProductService\\ProductService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\proyectos\\InventoryApp\\ProductService\\ProductService.csproj",
+        "projectUniqueName": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\ProductService\\ProductService.csproj",
         "projectName": "ProductService",
-        "projectPath": "F:\\proyectos\\InventoryApp\\ProductService\\ProductService.csproj",
-        "packagesPath": "C:\\Users\\Usuario\\.nuget\\packages\\",
-        "outputPath": "F:\\proyectos\\InventoryApp\\ProductService\\obj\\",
+        "projectPath": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\ProductService\\ProductService.csproj",
+        "packagesPath": "C:\\Users\\usuario\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\usuario\\Desktop\\proyecto\\InventoryApp\\ProductService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Usuario\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\usuario\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

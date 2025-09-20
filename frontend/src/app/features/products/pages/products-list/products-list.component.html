@@ -1,7 +1,6 @@
 <h2>Lista de Productos</h2>
 
 <div class="flex justify-content-between align-items-center mb-3">
-  <!-- Buscador global -->
   <div class="p-input-icon-left">
     <i class="pi pi-search"></i>
     <input pInputText type="text"
@@ -9,23 +8,16 @@
            placeholder="Buscar producto..." />
   </div>
 
-  <!-- Botón nuevo producto -->
   <button pButton label="Nuevo Producto" icon="pi pi-plus"
           class="p-button-success" (click)="openNew()"></button>
 </div>
-
-<!-- Tabla -->
 <p-table #dt [value]="products" [paginator]="true" [rows]="5" [loading]="loading"
          [globalFilterFields]="['name','category']" responsiveLayout="scroll">
   <ng-template pTemplate="header">
     <tr>
-      <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
       <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
       <th>
         Categoría
-        <input pInputText type="text"
-               (input)="dt.filter($any($event.target).value, 'category', 'contains')"
-               placeholder="Filtrar..." />
       </th>
       <th pSortableColumn="price">Precio <p-sortIcon field="price"></p-sortIcon></th>
       <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
@@ -35,7 +27,6 @@
 
   <ng-template pTemplate="body" let-product>
     <tr>
-      <td>{{ product.id }}</td>
       <td>{{ product.name }}</td>
       <td>{{ product.category }}</td>
       <td>{{ product.price | currency }}</td>
@@ -52,7 +43,6 @@
   </ng-template>
 </p-table>
 
-<!-- Modal -->
 <p-dialog header="{{ isEdit ? 'Editar Producto' : 'Nuevo Producto' }}"
           [(visible)]="productDialog" [modal]="true" [style]="{width: '450px'}">
   <form [formGroup]="productForm" class="p-fluid">

@@ -37,6 +37,8 @@ namespace TransactionService.Controllers
                     Type = t.Type,
                     ProductId = t.ProductId,
                     Quantity = t.Quantity,
+                    UnitPrice = t.UnitPrice,  
+                    Detail = t.Detail,       
                     TotalPrice = t.TotalPrice
                 });
 
@@ -64,6 +66,8 @@ namespace TransactionService.Controllers
                     Type = transaction.Type,
                     ProductId = transaction.ProductId,
                     Quantity = transaction.Quantity,
+                    UnitPrice = transaction.UnitPrice,
+                    Detail = transaction.Detail,
                     TotalPrice = transaction.TotalPrice
                 };
 
@@ -102,6 +106,8 @@ namespace TransactionService.Controllers
                     Date = created.Date,
                     Type = created.Type,
                     ProductId = created.ProductId,
+                    UnitPrice = created.UnitPrice,
+                    Detail = created.Detail, 
                     Quantity = created.Quantity,
                     TotalPrice = created.TotalPrice
                 };
@@ -141,6 +147,8 @@ namespace TransactionService.Controllers
                     Type = updated.Type,
                     ProductId = updated.ProductId,
                     Quantity = updated.Quantity,
+                    UnitPrice = updated.UnitPrice,
+                    Detail = updated.Detail,
                     TotalPrice = updated.TotalPrice
                 };
 
